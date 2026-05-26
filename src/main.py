@@ -1,5 +1,6 @@
 from textnode import *
 from htmlnode import *
+from pathlib import Path
 from inline_markdown import *
 from markdown_blocks import *
 import os
@@ -24,11 +25,8 @@ def main():
         shutil.rmtree(new_dir_path)
     os.mkdir(new_dir_path)
     copy_static_to_public(src_path, new_dir_path)
-    generate_page("content/index.md", "template.html", "public/index.html")
-    generate_page("content/blog/glorfindel/index.md", "template.html", "public/blog/glorfindel/index.html")
-    generate_page("content/blog/tom/index.md", "template.html", "public/blog/tom/index.html")
-    generate_page("content/blog/majesty/index.md", "template.html", "public/blog/majesty/index.html")
-    generate_page("content/contact/index.md", "template.html", "public/contact/index.html")
+    generate_pages_recursive("./content","./template.html",new_dir_path)
+
 
 def extract_title(markdown):
     lines = markdown.split("\n")
@@ -52,6 +50,17 @@ def generate_page(from_path, template_path, dest_path):
         os.makedirs(os.path.dirname(dest_path))
     with open(dest_path,"w") as d:
         d.write(new_page)
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for filename in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        if os.path.isfile(from_path):
+            dest_path = Path(dest_path).with_suffix(".html")
+            generate_page(from_path, template_path, dest_path)
+        else:
+            generate_pages_recursive(from_path, template_path, dest_path)
     
 
 
