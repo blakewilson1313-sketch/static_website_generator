@@ -21,7 +21,7 @@ def copy_static_to_public(source, dest):
         
 def main():
     src_path = "./static"
-    new_dir_path = "./public"    
+    new_dir_path = "./docs"    
     if os.path.exists(new_dir_path):
         shutil.rmtree(new_dir_path)
     os.mkdir(new_dir_path)

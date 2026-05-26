@@ -56,13 +56,11 @@ def markdown_to_html_node(markdown):
     child_nodes = []
     for block in blocks:
         blocktype = block_to_block_type(block)
-        print(f"--- BLOCK ({blocktype}): {repr(block[:80])}")
         if blocktype == BlockType.HEADING:
             text_list = block.split("# ", 1)
             h_length = 1 + len(text_list[0])
             children = text_to_children(text_list[1])  
             child_nodes.append(ParentNode(f"h{h_length}", children))
-            print("heading children:", len(children))
         elif blocktype == BlockType.CODE:
             text = block[4:-3]
             html_child = text_node_to_html_node(TextNode(text, TextType.TEXT))
@@ -74,7 +72,6 @@ def markdown_to_html_node(markdown):
             string = " ".join(cleaned)
             children = text_to_children(string)
             child_nodes.append(ParentNode("blockquote", children))
-            print("quote children:", len(children), repr(cleaned))
         elif blocktype == BlockType.ULIST:
             lines = block.split("\n")
             child = []
@@ -83,7 +80,6 @@ def markdown_to_html_node(markdown):
                 children = text_to_children(cleaned)
                 child.append(ParentNode("li",children))
             child_nodes.append(ParentNode("ul", child))
-            print("ul children:", len(children), repr(cleaned))
         elif blocktype == BlockType.OLIST:
             lines = block.split("\n")
             child = []
@@ -92,18 +88,15 @@ def markdown_to_html_node(markdown):
                 children = text_to_children(cleaned)
                 child.append(ParentNode("li",children))
             child_nodes.append(ParentNode("ol", child))
-            print("ol children:", len(children), repr(cleaned))
         else:
             text = " ".join(block.split("\n"))
             children = text_to_children(text)
-            child_nodes.append(ParentNode("p", children))
-            print("p children:", len(children))        
+            child_nodes.append(ParentNode("p", children))      
     return ParentNode("div",child_nodes)
 
 
 def text_to_children(text):
     textnodes = text_to_textnodes(text)
-    print(f"  text_to_textnodes({text!r}) → {textnodes}")
     childnodes = []
     for nodes in textnodes:
         childnodes.append(text_node_to_html_node(nodes))
