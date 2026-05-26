@@ -26,7 +26,7 @@ def main():
         shutil.rmtree(new_dir_path)
     os.mkdir(new_dir_path)
     copy_static_to_public(src_path, new_dir_path)
-    basepath = sys.argv[0] if sys.argv[0] is not None else "/"
+    basepath = sys.argv[1] if sys.argv[1] is not None else "/"
     generate_pages_recursive("./content","./template.html",new_dir_path, basepath)
 
 
